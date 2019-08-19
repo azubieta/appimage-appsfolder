@@ -1,5 +1,6 @@
 // library
 #include <QDebug>
+#include <QtConcurrent/QtConcurrent>
 
 // local
 #include "AppsDir.h"
@@ -20,6 +21,8 @@ void AppsDir::setWatcher(std::shared_ptr<AbstractFileSystemWatcher> watcher) {
 
 void AppsDir::enable() {
     watcher->enable();
+    for (const QString& appDirPath : watcher->directories())
+        QtConcurrent::run(updateAppsRegistration, appDirPath, launcher);
 }
 
 void AppsDir::disable() {
@@ -38,4 +41,15 @@ void AppsDir::onFileRemoved(const QString& filePath) {
     bool succeed = launcher->unregisterApp(filePath);
     if (!succeed)
         qWarning() << "Unable to unregister app: " << filePath;
+}
+
+void AppsDir::updateAppsRegistration(const QString& appDirPath, std::shared_ptr<AbstractLauncher> launcher) {
+    QDir appDir(appDirPath);
+    QStringList allFiles = appDir.entryList(
+            QDir::NoDotAndDotDot | QDir::System | QDir::Hidden | QDir::Files, QDir::DirsFirst);
+
+    for (const QString& filePath: allFiles) {
+        QString absoluteFilePath = appDir.absoluteFilePath(filePath);
+        launcher->registerApp(absoluteFilePath);
+    }
 }

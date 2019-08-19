@@ -1,6 +1,9 @@
 #pragma once
 //libraries
+#include <QSet>
 #include <QObject>
+#include <QString>
+
 //local
 
 
@@ -9,6 +12,8 @@ Q_OBJECT
 
 public:
     AbstractFileSystemWatcher(QObject* parent = nullptr) : QObject(parent) {}
+
+    virtual QSet<QString> directories() = 0;
 
 public slots:
 

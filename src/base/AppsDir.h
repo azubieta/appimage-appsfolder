@@ -34,6 +34,8 @@ private slots:
 
     void onFileRemoved(const QString& filePath);
 
+    static void updateAppsRegistration(const QString& appDirPath, std::shared_ptr<AbstractLauncher> launcher);
+
 private:
     std::shared_ptr<AbstractLauncher> launcher;
     std::shared_ptr<AbstractFileSystemWatcher> watcher;

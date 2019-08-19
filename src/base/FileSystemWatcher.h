@@ -41,5 +41,5 @@ public slots:
     void readEvents();
 
 public:
-    QSet<QString> directories();
+    QSet<QString> directories() override;
 };
