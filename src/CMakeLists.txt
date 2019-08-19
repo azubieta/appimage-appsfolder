@@ -1,4 +1,5 @@
 add_subdirectory(base)
+add_subdirectory(AppImage)
 add_subdirectory(appimageservices-interfaces)
 
 set(CMAKE_AUTORCC ON)
@@ -15,3 +16,4 @@ install(
     TARGETS ${CMAKE_PROJECT_NAME}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
