@@ -1,7 +1,7 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=AppImage Applications Dir
+Name=appimage-appsdir
 Comment=Create launcher entries for applications at $HOME/Applications
 TryExec=AppRun.sh
 Exec=AppRun.sh
