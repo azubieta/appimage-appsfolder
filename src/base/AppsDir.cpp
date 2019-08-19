@@ -28,10 +28,14 @@ void AppsDir::disable() {
 
 void AppsDir::onFileChanged(const QString& filePath) {
     qDebug() << "Registering app: " << filePath;
-    launcher->registerApp(filePath);
+    bool succeed = launcher->registerApp(filePath);
+    if (!succeed)
+        qWarning() << "Unable to register app: " << filePath;
 }
 
 void AppsDir::onFileRemoved(const QString& filePath) {
     qDebug() << "Unregistering app: " << filePath;
-    launcher->unregisterApp(filePath);
+    bool succeed = launcher->unregisterApp(filePath);
+    if (!succeed)
+        qWarning() << "Unable to unregister app: " << filePath;
 }

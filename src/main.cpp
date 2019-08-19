@@ -12,14 +12,14 @@
 
 int main(int argc, char** argv) {
     QCoreApplication app(argc, argv);
-    QSet<QString> appsDirs = {
+    QSet<QString> appsDirsPaths = {
             QDir::home().absoluteFilePath("Applications"),
             QDir::home().absoluteFilePath(".local/bin"),
             "/usr/local/bin",
             "/Applications",
     };
     
-    auto watcher = std::make_shared<FileSystemWatcher>(appsDirs);
+    auto watcher = std::make_shared<FileSystemWatcher>(appsDirsPaths);
     auto launcher = std::make_shared<AppImageServicesLauncher>();
 
     AppsDir appsDir;
@@ -27,7 +27,6 @@ int main(int argc, char** argv) {
     appsDir.setWatcher(watcher);
 
     appsDir.enable();
-
     return QCoreApplication::exec();
 }
 
