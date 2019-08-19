@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=AppImage Applications Dir
+Comment=Create launcher entries for applications at $HOME/Applications
+TryExec=appimage-appsdir
+Exec=appimage-appsdir
+Icon=appimage_logo
+Categories=Utility;
+NoDisplay=true
+X-AppImage-Integrate=false

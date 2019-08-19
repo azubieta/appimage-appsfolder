@@ -19,6 +19,8 @@ public:
 
     void emitFileRemoved(const QString& path);
 
+    QSet<QString> directories() override;
+
 private:
     bool wasEnableCalled = false;
     bool wasDisableCalled = false;

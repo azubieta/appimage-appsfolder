@@ -18,3 +18,7 @@ bool FakeFileSystemWatcher::enable() {
     wasEnableCalled = true;
     return true;
 }
+
+QSet<QString> FakeFileSystemWatcher::directories() {
+    return QSet<QString>();
+}

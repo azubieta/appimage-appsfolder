@@ -1,0 +1,49 @@
+language: cpp
+compiler: gcc
+
+notifications:
+  email: false
+
+env: QT_INSTALL_PREFIX=/opt/qt510 INSTALL_PREFIX=/usr PROJECT_BUILD_DIR=/tmp/build QT_SELECT=qt5
+
+addons:
+  apt:
+    sources:
+      - sourceline: ppa:beineri/opt-qt-5.10.1-trusty
+    packages:
+      - realpath
+      - wget
+      - git
+      - realpath
+      - cmake
+      - desktop-file-utils
+      - qt510-meta-minimal
+
+install:
+  - "/opt/qt510/bin/qt510-env.sh"
+  - sudo update-alternatives --install /usr/bin/qmake qmake /opt/qt510/bin/qmake 1
+  - .travis/install_ecm_from_sources.sh
+  - .travis/install_xdg_utils_cxx_from_sources.sh
+  - .travis/install_kf5attica_from_sources.sh
+  - .travis/install_libappimage_from_sources.sh
+  - .travis/install_yaml-cpp_from_sources.sh
+
+script:
+  - /opt/qt510/bin/qt510-env.sh
+  # Build project
+  - cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release .
+  - make -j`nproc`
+  - DESTDIR=AppDir make install
+
+  # Create AppImage
+  - wget -nc https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
+  - wget -nc https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
+  - export LD_LIBRARY_PATH=${QT_INSTALL_PREFIX}/lib:${INSTALL_PREFIX}/lib:${LD_LIBRARY_PATH}
+  - ./linuxdeploy-x86_64.AppImage --appdir=AppDir --plugin qt --output appimage
+
+after_success:
+  - ls -lh
+  # make sure only pushes to rewrite create a new release, otherwise pretend PR and upload to transfer.sh
+  - if [ "$TRAVIS_BRANCH" != "$TRAVIS_TAG" ] && [ "$TRAVIS_BRANCH" != "master" ]; then export TRAVIS_EVENT_TYPE=pull_request; fi
+  - wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
+  - bash upload.sh appimage-appsdir*.AppImage*
